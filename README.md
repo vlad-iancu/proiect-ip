@@ -1,5 +1,5 @@
 # proiect-ip
-Proiect la Ingineria programarii
+Proiect la Ingineria Programării
 
 ### Credits
 * Iancu Vlad-Alexandru
