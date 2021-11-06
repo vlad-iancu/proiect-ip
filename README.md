@@ -15,5 +15,3 @@ or \
 * Pîrlog Vlad
 * Căldărușe Bianca Alexandra
 * Tiron Emanuela
-
-
