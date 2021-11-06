@@ -1,0 +1,21 @@
+{
+    "dev": {
+        "host": "127.0.0.1",
+        "port": 0,
+        "db": {
+            "host": "localhost",
+            "user": "",
+            "password": ""
+        }
+    },
+    "test": {
+        "host": "",
+        "port": 0,
+        "db": {
+            "host": "",
+            "user": "",
+            "password": ""
+        }
+    },
+    "env": "dev"
+}
