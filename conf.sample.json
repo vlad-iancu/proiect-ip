@@ -4,6 +4,7 @@
         "port": 0,
         "db": {
             "host": "localhost",
+            "port": 0,
             "user": "",
             "password": ""
         }
@@ -13,6 +14,7 @@
         "port": 0,
         "db": {
             "host": "",
+            "port": 0,
             "user": "",
             "password": ""
         }
