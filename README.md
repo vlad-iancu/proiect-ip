@@ -1,4 +1,7 @@
 # proiect-ip
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5a425a44bbc7491e9a5d73590f513e7d)](https://app.codacy.com/gh/vlad-iancu/proiect-ip?utm_source=github.com&utm_medium=referral&utm_content=vlad-iancu/proiect-ip&utm_campaign=Badge_Grade_Settings)
+
 Proiect la Ingineria Programării
 
 ## Installation
