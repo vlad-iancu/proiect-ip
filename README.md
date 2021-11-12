@@ -1,5 +1,6 @@
 # proiect-ip
-Proiect la Ingineria Programării
+Proiect la Ingineria Programării \
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/44ab142848964c028d383f22cee1fac8)](https://www.codacy.com/gh/vlad-iancu/proiect-ip/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vlad-iancu/proiect-ip&amp;utm_campaign=Badge_Grade)
 
 ## Installation
 Create a virtual environment `python3 -m venv ./venv` \
