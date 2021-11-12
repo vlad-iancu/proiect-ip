@@ -7,6 +7,7 @@
 - [ ] update the docs and dependencies
 - [ ] add unit tests
 - [ ] update the issue number at the end of the PR
+- [ ] squash commits and rebase on top of `main` before pushing
 - [ ] delete this checklist
 
 ## Description
