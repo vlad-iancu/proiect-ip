@@ -29,7 +29,7 @@ CREATE TABLE Log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   type TEXT NOT NULL,
   properties_json TEXT NOT NULL,
-  at timestamp NOT NULL
+  at TIMESTAMP NOT NULL
 );
 
 ALTER TABLE CoffeeRecipeIngredient ADD FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id);
