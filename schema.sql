@@ -1,12 +1,12 @@
 CREATE TABLE Ingredient (
-  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   measure_unit TEXT NOT NULL,
   available REAL NOT NULL
 );
 
 CREATE TABLE CoffeeRecipe (
-  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL
 );
 
@@ -19,14 +19,14 @@ CREATE TABLE CoffeeRecipeIngredient (
 
 CREATE TABLE CoffeePreparation (
   recipe_id INTEGER,
-  started_at timestamp,
-  finished_at timestamp,
+  started_at TIMESTAMP,
+  finished_at TIMESTAMP,
   ingredients_json TEXT NOT NULL,
   PRIMARY KEY (recipe_id, started_at)
 );
 
 CREATE TABLE Log (
-  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   type TEXT NOT NULL,
   properties_json TEXT NOT NULL,
   at timestamp NOT NULL
