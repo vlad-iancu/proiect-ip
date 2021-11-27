@@ -1,36 +1,39 @@
 CREATE TABLE Ingredient (
-  id integer PRIMARY KEY AUTOINCREMENT,
-  name varchar(255) NOT NULL,
-  measure_unit varchar(255) NOT NULL,
-  available DECIMAL(10,5) NOT NULL
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  measure_unit TEXT NOT NULL,
+  available REAL NOT NULL
 );
 
 CREATE TABLE CoffeeRecipe (
-  id integer PRIMARY KEY AUTOINCREMENT,
-  name varchar(255) NOT NULL
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL
 );
 
 CREATE TABLE CoffeeRecipeIngredient (
-  recipe_id int,
-  ingredient_id int,
-  quantity DECIMAL(10,5) NOT NULL,
-  PRIMARY KEY (recipe_id, ingredient_id),
-  FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id),
-  FOREIGN KEY (ingredient_id) REFERENCES Ingredient (id)
+  recipe_id INTEGER,
+  ingredient_id INTEGER,
+  quantity REAL NOT NULL,
+  PRIMARY KEY (recipe_id, ingredient_id)
 );
 
 CREATE TABLE CoffeePreparation (
-  recipe_id int,
-  started_at timestamp,
-  finished_at timestamp,
-  ingredients_json varchar(255) NOT NULL,
-  PRIMARY KEY (recipe_id, started_at),
-  FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id)
+  recipe_id INTEGER,
+  started_at TIMESTAMP,
+  finished_at TIMESTAMP,
+  ingredients_json TEXT NOT NULL,
+  PRIMARY KEY (recipe_id, started_at)
 );
 
 CREATE TABLE Log (
-  id integer PRIMARY KEY AUTOINCREMENT,
-  type varchar(255) NOT NULL,
-  properties_json varchar(255) NOT NULL,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  properties_json TEXT NOT NULL,
   at timestamp NOT NULL
 );
+
+ALTER TABLE CoffeeRecipeIngredient ADD FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id);
+
+ALTER TABLE CoffeeRecipeIngredient ADD FOREIGN KEY (ingredient_id) REFERENCES Ingredient (id);
+
+ALTER TABLE CoffeePreparation ADD FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id);
