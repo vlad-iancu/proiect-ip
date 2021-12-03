@@ -14,6 +14,7 @@ app.register_blueprint(coffeerecipe.bp)
 
 db.init_app(app)
 
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
