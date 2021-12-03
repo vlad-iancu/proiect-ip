@@ -6,14 +6,12 @@ import coffeerecipe
 
 app = Flask(__name__)
 app.config.from_mapping(
-        SECRET_KEY='dev',
-    )
-
+    SECRET_KEY='dev',
+)
 
 app.register_blueprint(auth.bp)
 app.register_blueprint(coffeerecipe.bp)
 
-import db
 db.init_app(app)
 
 @app.route("/")
