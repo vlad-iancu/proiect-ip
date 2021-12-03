@@ -1,3 +1,5 @@
+INSERT INTO User (username, password) VALUES ('usertest', 'passtest');
+
 INSERT INTO Ingredient (name, measure_unit, available) VALUES ('water', 'ml', 500);
 INSERT INTO Ingredient (name, measure_unit, available) VALUES ('milk', 'ml', 300);
 INSERT INTO Ingredient (name, measure_unit, available) VALUES ('sugar', 'gr', 350);
