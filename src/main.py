@@ -1,7 +1,20 @@
 from flask import Flask
 
-app = Flask(__name__)
+import db
+import auth
+import coffeerecipe
 
+app = Flask(__name__)
+app.config.from_mapping(
+        SECRET_KEY='dev',
+    )
+
+
+app.register_blueprint(auth.bp)
+app.register_blueprint(coffeerecipe.bp)
+
+import db
+db.init_app(app)
 
 @app.route("/")
 def hello_world():

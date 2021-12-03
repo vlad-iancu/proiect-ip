@@ -1,3 +1,16 @@
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Ingredient;
+DROP TABLE IF EXISTS CoffeePreparation;
+DROP TABLE IF EXISTS CoffeeRecipe;
+DROP TABLE IF EXISTS CoffeeRecipeIngredient;
+DROP TABLE IF EXISTS Log;
+
+CREATE TABLE User (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL
+);
+
 CREATE TABLE Ingredient (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
@@ -14,7 +27,9 @@ CREATE TABLE CoffeeRecipeIngredient (
   recipe_id INTEGER,
   ingredient_id INTEGER,
   quantity REAL NOT NULL,
-  PRIMARY KEY (recipe_id, ingredient_id)
+  PRIMARY KEY (recipe_id, ingredient_id),
+  FOREIGN KEY (ingredient_id) REFERENCES Ingredient (id),
+  FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id)
 );
 
 CREATE TABLE CoffeePreparation (
@@ -22,7 +37,8 @@ CREATE TABLE CoffeePreparation (
   started_at TIMESTAMP,
   finished_at TIMESTAMP,
   ingredients_json TEXT NOT NULL,
-  PRIMARY KEY (recipe_id, started_at)
+  PRIMARY KEY (recipe_id, started_at),
+  FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id)
 );
 
 CREATE TABLE Log (
@@ -31,9 +47,3 @@ CREATE TABLE Log (
   properties_json TEXT NOT NULL,
   at TIMESTAMP NOT NULL
 );
-
-ALTER TABLE CoffeeRecipeIngredient ADD FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id);
-
-ALTER TABLE CoffeeRecipeIngredient ADD FOREIGN KEY (ingredient_id) REFERENCES Ingredient (id);
-
-ALTER TABLE CoffeePreparation ADD FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id);

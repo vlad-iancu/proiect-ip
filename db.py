@@ -25,9 +25,11 @@ def close_db(e=None):
 def init_db():
     db = get_db()
 
-    with open('schema.sql', encoding='utf8') as f:
-        db.executescript(f.read())
+    with open('schema.sql', encoding='utf8') as schema_file:
+        db.executescript(schema_file.read())
 
+    with open('data.sql', encoding='utf8') as data_file:
+        db.executescript(data_file.read())
 
 @click.command('init-db')
 @with_appcontext
