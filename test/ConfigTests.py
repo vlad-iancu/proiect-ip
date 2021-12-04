@@ -1,7 +1,6 @@
 import unittest
 import dotenv
-
-from src.config import Configuration
+from src.config.Configuration import Configuration
 
 
 class ConfigTests(unittest.TestCase):
