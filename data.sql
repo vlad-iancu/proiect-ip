@@ -1,3 +1,5 @@
+INSERT INTO User (username, password) VALUES ('usertest', 'passtest');
+
 INSERT INTO Ingredient (name, measure_unit, available) VALUES ('water', 'ml', 500);
 INSERT INTO Ingredient (name, measure_unit, available) VALUES ('milk', 'ml', 300);
 INSERT INTO Ingredient (name, measure_unit, available) VALUES ('sugar', 'gr', 350);
@@ -7,13 +9,13 @@ INSERT INTO Ingredient (name, measure_unit, available) VALUES ('syrup', 'ml', 50
 INSERT INTO Ingredient (name, measure_unit, available) VALUES ('whiskey', 'ml', 30);
 INSERT INTO Ingredient (name, measure_unit, available) VALUES ('coffee', 'gr', 400);
 
-INSERT INTO CoffeeRecipe (name) VALUES ('Irish Coffee');
-INSERT INTO CoffeeRecipe (name) VALUES ('Hot Chocolate');
-INSERT INTO CoffeeRecipe (name) VALUES ('Short Espresso');
-INSERT INTO CoffeeRecipe (name) VALUES ('Long Espresso');
-INSERT INTO CoffeeRecipe (name) VALUES ('Cappuccino');
-INSERT INTO CoffeeRecipe (name) VALUES ('Caramel Frappe');
-INSERT INTO CoffeeRecipe (name) VALUES ('Mocha');
+INSERT INTO CoffeeRecipe (name, preparation_time) VALUES ('Irish Coffee', 1);
+INSERT INTO CoffeeRecipe (name, preparation_time) VALUES ('Hot Chocolate', 0.5);
+INSERT INTO CoffeeRecipe (name, preparation_time) VALUES ('Short Espresso', 0.25);
+INSERT INTO CoffeeRecipe (name, preparation_time) VALUES ('Long Espresso', 1.25);
+INSERT INTO CoffeeRecipe (name, preparation_time) VALUES ('Cappuccino', 0.75);
+INSERT INTO CoffeeRecipe (name, preparation_time) VALUES ('Caramel Frappe', 2);
+INSERT INTO CoffeeRecipe (name, preparation_time) VALUES ('Mocha', 1.75);
 
 INSERT INTO CoffeeRecipeIngredient (recipe_id, ingredient_id, quantity) VALUES (1, 5, 50);
 INSERT INTO CoffeeRecipeIngredient (recipe_id, ingredient_id, quantity) VALUES (1, 7, 10);

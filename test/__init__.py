@@ -1,1 +1,1 @@
-from .ConfigTests import ConfigTests
+from test.ConfigTests import ConfigTests
