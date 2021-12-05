@@ -1,6 +1,6 @@
 import sqlite3
-from config.Configuration import Configuration
-from model.Ingredient import Ingredient
+from src.config.Configuration import Configuration
+from src.model.Ingredient import Ingredient
 
 
 class IngredientRepository:
