@@ -2,8 +2,8 @@ from os import remove
 import unittest
 import sqlite3
 
-from src.repository.IngredientRepository import IngredientRepository
-from src.model.Ingredient import Ingredient
+from src.services.IngredientService import IngredientService
+from src.models.Ingredient import Ingredient
 from src.config.Configuration import Configuration
 
 
@@ -29,8 +29,8 @@ class IngredientTests(unittest.TestCase):
     ingredient.available = 50
 
     # Act
-    repo: IngredientRepository = IngredientRepository()
-    id = repo.add(ingredient)
+    service: IngredientService = IngredientService()
+    id = service.addIngredient(ingredient)
 
     # Assert
     conn = sqlite3.connect(conf.db.file)
