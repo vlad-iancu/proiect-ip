@@ -1,12 +1,25 @@
+from os import remove
 import unittest
 import sqlite3
 
-from src.model.IngredientRepository import IngredientRepository
+from src.repository.IngredientRepository import IngredientRepository
 from src.model.Ingredient import Ingredient
 from src.config.Configuration import Configuration
 
 
 class IngredientTests(unittest.TestCase):
+  def setUp(self) -> None:
+    conf = Configuration.getInstance()
+    conn = sqlite3.connect(conf.db.file)
+    cursor = conn.cursor()
+    sql_schema = open("./schema.sql")
+    cursor.executescript(sql_schema.read())
+    sql_schema.close()
+  
+  def tearDown(self) -> None:
+    conf = Configuration.getInstance()
+    remove(conf.db.file)
+
   def testAddIngredient(self):
     # Arrange
     conf = Configuration.getInstance()
@@ -20,7 +33,7 @@ class IngredientTests(unittest.TestCase):
     id = repo.add(ingredient)
 
     # Assert
-    conn = conn = sqlite3.connect(conf.db.file)
+    conn = sqlite3.connect(conf.db.file)
     cursor = conn.execute("SELECT * FROM Ingredient WHERE id = ?",(id,))
     results = cursor.fetchall()
     if(len(results) == 0):
