@@ -20,7 +20,7 @@ def register():
     elif not password:
         return jsonify({'status': 'Password is required.'}), 403
 
-    status = __userService.register_user(username, password)
+    status = __userService.registerUser(username, password)
     if status:
         return jsonify({'status': f'{status}'}), 403
 
@@ -32,7 +32,7 @@ def login():
     username = request.form['username']
     password = request.form['password']
 
-    status = __userService.login_user(username, password)
+    status = __userService.loginUser(username, password)
     if status:
         return jsonify({'status': f'{status}'}), 403
 
@@ -60,4 +60,4 @@ def login_required(view):
 
 @bp.before_app_request
 def load_logged_in_user():
-    __userService.load_current_user()
+    __userService.loadCurrentUser()

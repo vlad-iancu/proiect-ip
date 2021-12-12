@@ -6,15 +6,14 @@ from src.repositories.UserRepository import UserRepository
 class UserService:
     def __init__(self) -> None:
         self.userRepository = UserRepository()
-        pass
 
-    def register_user(self, username, password):
+    def registerUser(self, username, password):
         if self.userRepository.add(username, password) == -1:
             return f'User {username} is already registered.'
 
         return 0
 
-    def login_user(self, username, password):
+    def loginUser(self, username, password):
         user = self.userRepository.get_by_username(username)
 
         if user is None:
@@ -30,7 +29,7 @@ class UserService:
     def logout():
         session.clear()
 
-    def load_current_user(self):
+    def loadCurrentUser(self):
         user_id = session.get('user_id')
 
         if user_id is None:

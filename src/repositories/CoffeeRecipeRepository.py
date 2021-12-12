@@ -1,19 +1,83 @@
+from typing import List
 from src.db import get_db
+from src.models.CoffeeRecipe import CoffeeRecipe
 
 
 class CoffeeRecipeRepository:
 
-    def __init__(self) -> None:
-        pass
+    def add(self, recipe: CoffeeRecipe):
+        db = get_db()
 
-    def get_all():
-        coffee_recipes = get_db().execute('SELECT * FROM coffeerecipe ORDER BY name').fetchall()
+        db.execute(
+            'INSERT INTO CoffeeRecipe (name, preparation_time)'
+            ' VALUES (?,?)',
+            (recipe.name, recipe.preparation_time)
+        )
 
-        return coffee_recipes
+        coffee_recipe_id = db.execute(
+            'SELECT * FROM CoffeeRecipe'
+            ' WHERE name = (?)',
+            (recipe.name,)
+        ).fetchone()[0]
 
-    def get_available():
-        available_coffees = get_db().execute(
-            'SELECT cri1.name FROM coffeerecipe cri1, ' +
+        for coffee_recipe_ingredient in recipe.ingredients_with_quantities:
+            db.execute(
+                'INSERT INTO CoffeeRecipeIngredient (recipe_id, ingredient_id, quantity)'
+                ' VALUES (?,?,?)',
+                (int(coffee_recipe_id),
+                 int(coffee_recipe_ingredient[0]),
+                 int(coffee_recipe_ingredient[1]))
+            )
+
+        db.commit()
+
+        added_recipe = db.execute(
+            'SELECT * FROM CoffeeRecipe'
+            ' WHERE name = (?)',
+            (recipe.name,)
+        ).fetchone()
+
+        return added_recipe
+
+    def getAll(self) -> List[CoffeeRecipe]:
+        db = get_db()
+
+        rows = db.execute("SELECT * FROM CoffeeRecipe ORDER BY id")
+
+        results: List[CoffeeRecipe] = []
+
+        for row in rows:
+            recipe: CoffeeRecipe = CoffeeRecipe()
+            recipe.id = row[0]
+            recipe.name = row[1]
+            recipe.preparation_time = row[2]
+            results.append(recipe)
+
+        return results
+
+    def getRecipeIdByName(self, recipe_name):
+        coffee_recipe_id = get_db().execute(
+            'SELECT id'
+            ' FROM CoffeeRecipe'
+            ' WHERE name = (?)',
+            (recipe_name)
+        ).fetchone()[0]
+
+        return coffee_recipe_id
+
+    def getIngredientIdsByRecipeId(self, recipe_id):
+        ingredients = get_db().execute(
+            'SELECT id'
+            ' FROM CoffeeRecipeIngredient'
+            ' WHERE recipe_id = (?)',
+            (recipe_id)
+        ).fetchall()
+
+        return ingredients
+
+    def getAvailable(self):
+        rows = get_db().execute(
+            'SELECT * FROM coffeerecipe cri1, ' +
             '(SELECT recipe_id, count(*) as no_ingredients_total ' +
             'FROM coffeerecipeingredient cri JOIN ingredient i ' +
             'WHERE cri.ingredient_id = i.id GROUP BY cri.recipe_id) cri2,' +
@@ -26,4 +90,13 @@ class CoffeeRecipeRepository:
             'AND cri2.no_ingredients_total = cri3.no_ingredients_available'
         ).fetchall()
 
-        return available_coffees
+        results: List[CoffeeRecipe] = []
+
+        for row in rows:
+            recipe: CoffeeRecipe = CoffeeRecipe()
+            recipe.id = row[0]
+            recipe.name = row[1]
+            recipe.preparation_time = row[2]
+            results.append(recipe)
+
+        return results

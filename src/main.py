@@ -2,8 +2,8 @@ from flask import Flask
 
 import src.db as db
 import src.controllers.AuthController as auth
-from src.controllers.CoffeePreparationController import CoffeePreparationController as coffeepreparation
-from src.controllers.CoffeeRecipeController import CoffeeRecipeController as coffeerecipe
+import src.controllers.CoffeePreparationController as coffeepreparation
+import src.controllers.CoffeeRecipeController as coffeerecipe
 import src.controllers.IngredientController as ingredient
 
 app = Flask(__name__)
