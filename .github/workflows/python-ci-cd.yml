@@ -31,7 +31,7 @@ jobs:
 
     - name: Run the tests and create the .coverage file
       run: |
-        coverage run -m unittest discover
+        coverage run -m unittest discover -v
 
     - name: Create the coverage.xml file
       run: |
