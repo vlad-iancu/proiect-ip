@@ -1,4 +1,3 @@
-from os import remove
 import unittest
 import sqlite3
 
@@ -15,10 +14,6 @@ class IngredientTests(unittest.TestCase):
         sql_schema = open("./schema.sql")
         cursor.executescript(sql_schema.read())
         sql_schema.close()
-
-    def tearDown(self) -> None:
-        conf = Configuration.getInstance()
-        remove(conf.db.file)
 
     def testAddIngredient(self):
         # Arrange

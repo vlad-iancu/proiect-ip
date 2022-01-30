@@ -1,4 +1,3 @@
-import sqlite3
 from src.config.Configuration import Configuration
 from src.models.Ingredient import Ingredient
 from typing import List
@@ -10,7 +9,6 @@ class IngredientRepository:
     def __init__(self):
         self.conf = Configuration.getInstance()
         self.conn = get_db()
-        #self.conn = sqlite3.connect(self.conf.db.file, check_same_thread=False)
 
     def add(self, data: Ingredient) -> int:
         stmt = '''
