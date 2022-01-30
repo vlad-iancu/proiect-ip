@@ -1,26 +1,30 @@
 import sqlite3
 
 import click
-from flask import g
 from flask.cli import with_appcontext
+from src.config.Configuration import Configuration
+
+db = None
 
 
 def get_db():
-    if 'db' not in g:
-        g.db = sqlite3.connect(
-            'coffeemaker.sqlite',
-            detect_types=sqlite3.PARSE_DECLTYPES
+    global db
+    if db is None:
+        db = sqlite3.connect(
+            Configuration.getInstance().db.file,
+            detect_types=sqlite3.PARSE_DECLTYPES,
+            check_same_thread=False
         )
-        g.db.row_factory = sqlite3.Row
+        db.row_factory = sqlite3.Row
 
-    return g.db
+    return db
 
 
 def close_db(e=None):
-    db = g.pop('db', None)
-
+    global db
     if db is not None:
         db.close()
+        db = None
 
 
 def init_db():

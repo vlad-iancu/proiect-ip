@@ -15,7 +15,7 @@ CREATE TABLE Ingredient (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   measure_unit TEXT NOT NULL,
-  available REAL NOT NULL,
+  available REAL NOT NULL
 );
 
 CREATE TABLE CoffeeRecipe (
@@ -48,4 +48,3 @@ CREATE TABLE Log (
   properties_json TEXT NOT NULL,
   at TEXT NOT NULL
 );
-
