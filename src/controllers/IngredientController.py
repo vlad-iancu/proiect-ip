@@ -3,14 +3,21 @@ from src.models.Ingredient import Ingredient
 
 from src.services.IngredientService import IngredientService
 
-service = IngredientService()
+service = None
 
 bp = Blueprint("ingredient", __name__, url_prefix="/ingredient")
 
 
+def get_service():
+    global service
+    if service is None:
+        service = IngredientService()
+    return service
+
+
 @bp.route("/", methods=["GET"])
 def get_all_ingredients():
-    data = service.getAllIngredients()
+    data = get_service().getAllIngredients()
     return jsonify({
         "status": "Success",
         "data": {
@@ -24,7 +31,7 @@ def add_ingredient():
     json_data = request.json
     ingredient: Ingredient = Ingredient(
         0, json_data["name"], json_data["unit"], json_data["available"])
-    id = service.addIngredient(ingredient)
+    id = get_service().addIngredient(ingredient)
     ingredient.id = id
     return jsonify({
         "status": "Success",
@@ -39,7 +46,7 @@ def update_ingredient(id):
     json_data = request.json
     ingredient: Ingredient = Ingredient(
         id, json_data["name"], json_data["unit"], json_data["available"])
-    ingredient = service.addIngredient(ingredient)
+    ingredient = get_service().addIngredient(ingredient)
     return jsonify({
         "status": "Success",
         "data": {
@@ -50,7 +57,7 @@ def update_ingredient(id):
 
 @bp.route("/:id", methods=["DELETE"])
 def delete_ingredient(id):
-    deleted = service.deleteIngredient(id)
+    deleted = get_service().deleteIngredient(id)
     status = "Success" if deleted else "Fail"
     return jsonify({
         "status": status,

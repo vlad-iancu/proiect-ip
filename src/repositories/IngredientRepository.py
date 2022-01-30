@@ -9,8 +9,8 @@ class IngredientRepository:
 
     def __init__(self):
         self.conf = Configuration.getInstance()
-        #self.conn = get_db()
-        self.conn = sqlite3.connect(self.conf.db.file, check_same_thread=False)
+        self.conn = get_db()
+        #self.conn = sqlite3.connect(self.conf.db.file, check_same_thread=False)
 
     def add(self, data: Ingredient) -> int:
         stmt = '''
