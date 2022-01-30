@@ -42,4 +42,3 @@ On Windows:
 * Iancu Vlad-Alexandru
 * Pîrlog Vlad
 * Căldărușe Bianca Alexandra
-* Tiron Emanuela
