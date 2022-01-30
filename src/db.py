@@ -3,13 +3,15 @@ import sqlite3
 import click
 from flask import g
 from flask.cli import with_appcontext
+from src.config.Configuration import Configuration
 
 
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
-            'coffeemaker.sqlite',
-            detect_types=sqlite3.PARSE_DECLTYPES
+            Configuration.getInstance().db.file,
+            detect_types=sqlite3.PARSE_DECLTYPES,
+            check_same_thread=False
         )
         g.db.row_factory = sqlite3.Row
 

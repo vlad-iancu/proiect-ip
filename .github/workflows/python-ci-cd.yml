@@ -30,8 +30,10 @@ jobs:
         python -m autopep8 -r --diff --exit-code src/ test/
 
     - name: Run the tests and create the .coverage file
+      env:
+        COVERAGE: TRUE
       run: |
-        coverage run -m unittest discover -v
+        source ./test.sh
 
     - name: Create the coverage.xml file
       run: |

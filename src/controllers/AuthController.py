@@ -3,7 +3,6 @@ import functools
 from flask import (
     Blueprint, g, request, jsonify
 )
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from src.services.UserService import UserService
 
