@@ -1,40 +1,87 @@
 from flask import (
-    Blueprint, jsonify
+    Blueprint, jsonify, request
 )
 
 from src.controllers.AuthController import login_required
 from src.services.CoffeeRecipeService import CoffeeRecipeService
 
+service = None
 
-class CoffeeRecipeController:
-    def __init__(self) -> None:
-        self.coffeeRecipeService = CoffeeRecipeService()
-        pass
+bp = Blueprint('coffeerecipe', __name__, url_prefix='/coffeerecipes')
 
-    bp = Blueprint('coffeerecipe', __name__, url_prefix='/coffeerecipes')
 
-    @bp.route('/', methods=['GET'])
-    @login_required
-    def get_all_coffee_recipes(self):
+def getService():
+    global service
+    if service is None:
+        service = CoffeeRecipeService()
+    return service
 
-        data = self.coffeeRecipeService.get_all_coffee_recipes()
 
-        return jsonify({
-            'status': 'Coffee recipes successfully retrieved',
-            'data': {
-                'coffee_recipes': data
-            }
-        }), 200
+@bp.route('/', methods=['GET'])
+@login_required
+def getAll():
 
-    @bp.route('/available', methods=['GET'])
-    @login_required
-    def get_available_coffees(self):
+    data = getService().getAll()
 
-        data = self.coffeeRecipeService.get_available_coffee_recipes()
+    return jsonify({
+        'status': 'Coffee recipes successfully retrieved',
+        'data': {
+            'coffee_recipes': data
+        }
+    }), 200
 
-        return jsonify({
-            'status': 'Available coffees successfully retrieved',
-            'data': {
-                'available_coffees': data
-            }
-        }), 200
+
+@bp.route('/recommendations', methods=['GET'])
+@login_required
+def getRecommendedCoffeeRecipes(current_time, temperature):
+    """
+    Returns recommended coffee recipe(s) based on time and temperature (max. 2 recommendations)
+
+    :param current_time: Current time in str. format 'HH:MM'
+    :param temperature: Integer temperature in str. format
+    :return: List of strings (CoffeeRecipe names)
+    """
+
+    data = getService().getRecommendations(current_time, temperature)
+
+    return jsonify({
+        'status': 'Coffee recommendations successfully retrieved',
+        'data': {
+            'recommendations': data
+        }
+    }), 200
+
+
+@bp.route('/', methods=['POST'])
+@login_required
+def add():
+    coffee_recipe = request.form['coffee_recipe']
+
+    if not coffee_recipe['name']:
+        return jsonify({'status': 'Coffee recipe name is required.'}), 403
+
+    if not coffee_recipe['ingredients_with_quantity']:
+        return jsonify({'status': 'Coffee recipe ingredients (min. 1) are required.'}), 403
+
+    data = getService().add(coffee_recipe)
+
+    return jsonify({
+        'status': 'Coffee recipe succesfully added',
+        'data': {
+            'added_recipe': data
+        }
+    }), 200
+
+
+@bp.route('/available', methods=['GET'])
+@login_required
+def get_available_coffees():
+
+    data = getService().getAvailable()
+
+    return jsonify({
+        'status': 'Available coffees successfully retrieved',
+        'data': {
+            'available_coffees': data
+        }
+    }), 200

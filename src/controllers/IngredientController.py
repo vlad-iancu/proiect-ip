@@ -8,7 +8,7 @@ service = None
 bp = Blueprint("ingredient", __name__, url_prefix="/ingredient")
 
 
-def get_service():
+def getService():
     global service
     if service is None:
         service = IngredientService()
@@ -17,7 +17,7 @@ def get_service():
 
 @bp.route("/", methods=["GET"])
 def get_all_ingredients():
-    data = get_service().getAllIngredients()
+    data = getService().getAllIngredients()
     return jsonify({
         "status": "Success",
         "data": {
@@ -31,7 +31,7 @@ def add_ingredient():
     json_data = request.json
     ingredient: Ingredient = Ingredient(
         0, json_data["name"], json_data["unit"], json_data["available"])
-    id = get_service().addIngredient(ingredient)
+    id = getService().addIngredient(ingredient)
     ingredient.id = id
     return jsonify({
         "status": "Success",
@@ -46,7 +46,7 @@ def update_ingredient(id):
     json_data = request.json
     ingredient: Ingredient = Ingredient(
         id, json_data["name"], json_data["unit"], json_data["available"])
-    ingredient = get_service().addIngredient(ingredient)
+    ingredient = getService().addIngredient(ingredient)
     return jsonify({
         "status": "Success",
         "data": {
@@ -57,7 +57,7 @@ def update_ingredient(id):
 
 @bp.route("/:id", methods=["DELETE"])
 def delete_ingredient(id):
-    deleted = get_service().deleteIngredient(id)
+    deleted = getService().deleteIngredient(id)
     status = "Success" if deleted else "Fail"
     return jsonify({
         "status": status,
