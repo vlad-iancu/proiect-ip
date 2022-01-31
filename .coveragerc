@@ -5,6 +5,7 @@ source =
     ./src/controllers
     ./src/repositories
     ./src/services
+    ./src/models
 
 omit =
     *__init__.py
