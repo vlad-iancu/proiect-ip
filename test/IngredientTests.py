@@ -3,13 +3,13 @@ import sqlite3
 
 from src.services.IngredientService import IngredientService
 from src.models.Ingredient import Ingredient
-from src.config.Configuration import Configuration
+from src.config.Configuration import get_configuration
 
 
 class IngredientTests(unittest.TestCase):
     def setUp(self) -> None:
-        conf = Configuration.getInstance()
-        conn = sqlite3.connect(conf.db.file)
+        conf = get_configuration()
+        conn = sqlite3.connect(conf.db_file)
         cursor = conn.cursor()
         sql_schema = open("./schema.sql")
         cursor.executescript(sql_schema.read())
@@ -17,7 +17,7 @@ class IngredientTests(unittest.TestCase):
 
     def testAddIngredient(self):
         # Arrange
-        conf = Configuration.getInstance()
+        conf = get_configuration()
         ingredient: Ingredient = Ingredient()
         ingredient.name = "MyIngredient"
         ingredient.unit = "g"
@@ -28,7 +28,7 @@ class IngredientTests(unittest.TestCase):
         id = service.addIngredient(ingredient)
 
         # Assert
-        conn = sqlite3.connect(conf.db.file)
+        conn = sqlite3.connect(conf.db_file)
         cursor = conn.execute("SELECT * FROM Ingredient WHERE id = ?", (id,))
         results = cursor.fetchall()
         self.assertNotEqual(len(results), 0)
@@ -43,8 +43,8 @@ class IngredientTests(unittest.TestCase):
 
     def testGetAllIngredients(self):
         # Arrange
-        conf = Configuration.getInstance()
-        conn = sqlite3.connect(conf.db.file)
+        conf = get_configuration()
+        conn = sqlite3.connect(conf.db_file)
         conn.execute("INSERT INTO Ingredient(name, available, measure_unit) VALUES(?,?,?)",
                      ("MyIngredient1", 100, "g"))
         conn.execute("INSERT INTO Ingredient(name, available, measure_unit) VALUES(?,?,?)",
@@ -65,8 +65,8 @@ class IngredientTests(unittest.TestCase):
 
     def testGetIngredientById(self):
         # Arrange
-        conf = Configuration.getInstance()
-        conn = sqlite3.connect(conf.db.file)
+        conf = get_configuration()
+        conn = sqlite3.connect(conf.db_file)
         conn.execute("INSERT INTO Ingredient(name, available, measure_unit) VALUES(?,?,?)",
                      ("MyIngredient1", 100, "g"))
         conn.execute("INSERT INTO Ingredient(name, available, measure_unit) VALUES(?,?,?)",
@@ -84,8 +84,8 @@ class IngredientTests(unittest.TestCase):
 
     def testDeleteIngredients(self):
         # Arrange
-        conf = Configuration.getInstance()
-        conn = sqlite3.connect(conf.db.file)
+        conf = get_configuration()
+        conn = sqlite3.connect(conf.db_file)
         conn.execute("INSERT INTO Ingredient(name, available, measure_unit) VALUES(?,?,?)",
                      ("MyIngredient1", 100, "g"))
         conn.execute("INSERT INTO Ingredient(name, available, measure_unit) VALUES(?,?,?)",
@@ -113,8 +113,8 @@ class IngredientTests(unittest.TestCase):
 
     def testUpdateIngredient(self):
         # Arrange
-        conf = Configuration.getInstance()
-        conn = sqlite3.connect(conf.db.file)
+        conf = get_configuration()
+        conn = sqlite3.connect(conf.db_file)
         conn.execute("INSERT INTO Ingredient(name, available, measure_unit) VALUES(?,?,?)",
                      ("MyIngredient1", 100, "g"))
         conn.execute("INSERT INTO Ingredient(name, available, measure_unit) VALUES(?,?,?)",

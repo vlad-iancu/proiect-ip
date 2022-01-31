@@ -1,28 +1,35 @@
 import os
+from typing import Dict
 import dotenv
 
 
-class Configuration:
-    __instance: 'Configuration' = None
+class __Configuration:
+    def __init__(self) -> None:
+        self.db_host: str = None
+        self.db_port: int = None
+        self.db_user: str = None
+        self.db_password: str = None
+        self.db_file: str = None
 
-    @staticmethod
-    def getInstance() -> 'Configuration':
-        if Configuration.__instance is None:
-            Configuration(".env.{}".format(os.getenv("FLASK_ENV", "development")))
-        return Configuration.__instance
 
-    def __init__(self, dotenvPath=".env.development") -> None:
-        if Configuration.__instance is not None:
-            raise Exception("Explicit call of the singleton constructor.")
-        self.db = Configuration._DbConfiguration(dotenvPath)
-        Configuration.__instance = self
+__configurations: Dict[str, __Configuration] = {}
 
-    class _DbConfiguration:
-        def __init__(self, dotenvPath=".env.development") -> None:
-            dotenvcfg = dotenv.dotenv_values(dotenvPath)
 
-            self.host = dotenvcfg.get("APP_DB_HOST")
-            self.port = int(dotenvcfg.get("APP_DB_PORT"))
-            self.user = dotenvcfg.get("APP_DB_USER")
-            self.password = dotenvcfg.get("APP_DB_PASSWORD")
-            self.file = dotenvcfg.get("APP_DB_FILE")
+def get_configuration(envfile: str = None) -> __Configuration:
+    global __configurations
+    if envfile is None:
+        envfile = ".env.{}".format(os.getenv("FLASK_ENV", "development"))
+
+    if envfile not in __configurations:
+        dotenvcfg = dotenv.dotenv_values(envfile)
+
+        cfg = __Configuration()
+        cfg.db_host = dotenvcfg.get("APP_DB_HOST")
+        cfg.db_port = int(dotenvcfg.get("APP_DB_PORT"))
+        cfg.db_user = dotenvcfg.get("APP_DB_USER")
+        cfg.db_password = dotenvcfg.get("APP_DB_PASSWORD")
+        cfg.db_file = dotenvcfg.get("APP_DB_FILE")
+
+        __configurations[envfile] = cfg
+
+    return __configurations[envfile]
