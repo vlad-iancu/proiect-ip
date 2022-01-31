@@ -10,9 +10,13 @@ class CoffeePreparationTests(unittest.TestCase):
         conf = get_configuration()
         conn = sqlite3.connect(conf.db_file)
         cursor = conn.cursor()
+        clear_schema = open('./clear.sql')
         sql_schema = open("./schema.sql")
+        cursor.executescript(clear_schema.read())
         cursor.executescript(sql_schema.read())
         sql_schema.close()
+        clear_schema.close()
+        conn.close()
 
     def testGetAll(self):
         # Arrange
