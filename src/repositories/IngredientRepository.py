@@ -1,4 +1,4 @@
-from src.config.Configuration import Configuration
+from src.config.Configuration import get_configuration
 from src.models.Ingredient import Ingredient
 from typing import List
 from src.db import get_db
@@ -7,7 +7,7 @@ from src.db import get_db
 class IngredientRepository:
 
     def __init__(self):
-        self.conf = Configuration.getInstance()
+        self.conf = get_configuration()
         self.conn = get_db()
 
     def add(self, data: Ingredient) -> int:

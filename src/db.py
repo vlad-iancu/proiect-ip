@@ -1,8 +1,8 @@
 import sqlite3
-
+import atexit
 import click
 from flask.cli import with_appcontext
-from src.config.Configuration import Configuration
+from src.config.Configuration import get_configuration
 
 db = None
 
@@ -11,7 +11,7 @@ def get_db():
     global db
     if db is None:
         db = sqlite3.connect(
-            Configuration.getInstance().db.file,
+            get_configuration().db_file,
             detect_types=sqlite3.PARSE_DECLTYPES,
             check_same_thread=False
         )
@@ -20,7 +20,7 @@ def get_db():
     return db
 
 
-def close_db(e=None):
+def close_db():
     global db
     if db is not None:
         db.close()
@@ -46,5 +46,5 @@ def init_db_command():
 
 
 def init_app(app):
-    app.teardown_appcontext(close_db)
+    atexit.register(close_db)
     app.cli.add_command(init_db_command)
