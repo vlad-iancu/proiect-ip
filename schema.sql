@@ -1,30 +1,23 @@
-DROP TABLE IF EXISTS User;
-DROP TABLE IF EXISTS Ingredient;
-DROP TABLE IF EXISTS CoffeePreparation;
-DROP TABLE IF EXISTS CoffeeRecipe;
-DROP TABLE IF EXISTS CoffeeRecipeIngredient;
-DROP TABLE IF EXISTS Log;
-
-CREATE TABLE User (
+CREATE TABLE IF NOT EXISTS User (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL
 );
 
-CREATE TABLE Ingredient (
+CREATE TABLE IF NOT EXISTS Ingredient (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   measure_unit TEXT NOT NULL,
   available REAL NOT NULL
 );
 
-CREATE TABLE CoffeeRecipe (
+CREATE TABLE IF NOT EXISTS CoffeeRecipe (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   preparation_time REAL
 );
 
-CREATE TABLE CoffeeRecipeIngredient (
+CREATE TABLE IF NOT EXISTS CoffeeRecipeIngredient (
   recipe_id INTEGER,
   ingredient_id INTEGER,
   quantity REAL NOT NULL,
@@ -33,7 +26,7 @@ CREATE TABLE CoffeeRecipeIngredient (
   FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id)
 );
 
-CREATE TABLE CoffeePreparation (
+CREATE TABLE IF NOT EXISTS CoffeePreparation (
   recipe_id INTEGER,
   started_at TEXT,
   finished_at TEXT,
@@ -42,7 +35,7 @@ CREATE TABLE CoffeePreparation (
   FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id)
 );
 
-CREATE TABLE Log (
+CREATE TABLE IF NOT EXISTS Log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   type TEXT NOT NULL,
   properties_json TEXT NOT NULL,
