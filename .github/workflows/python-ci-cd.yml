@@ -33,7 +33,7 @@ jobs:
       env:
         COVERAGE: TRUE
       run: |
-        source ./test.sh
+        source ./run-unit-tests.sh
 
     - name: Create the coverage.xml file
       run: |

@@ -6,9 +6,9 @@ export FLASK_RUN_PORT=8888
 
 python3 -m flask init-db
 
-if [ -n $COVERAGE ] 
+if [ -n "$COVERAGE" ]
 then
-    coverage run -m unittest discover
+    coverage run -m unittest discover -v
 else
-    python3 -m unittest discover
+    python3 -m unittest discover -v
 fi
