@@ -10,6 +10,9 @@ class CoffeeRecipeService:
     def getAll(self) -> List[CoffeeRecipe]:
         return self.coffeeRecipeRepository.getAll()
 
+    def getById(self, id: int) -> CoffeeRecipe:
+        return self.coffeeRecipeRepository.getById(id)
+
     def getAvailable(self) -> List[CoffeeRecipe]:
         return self.coffeeRecipeRepository.getAvailable()
 
@@ -17,7 +20,7 @@ class CoffeeRecipeService:
         return self.coffeeRecipeRepository.add(recipe)
 
     def getRecommendations(self, current_time: str, temperature: str) -> List[str]:
-        recommendations = []
+        recommendations = None
 
         if ('06:00' <= current_time <= '12:00'):
             recommendations = ['Short Espresso', 'Long Espresso']
@@ -28,7 +31,7 @@ class CoffeeRecipeService:
                 recommendations = ['Hot Chocolate', 'Irish Coffee']
             else:
                 recommendations = ['Caramel Frappe', 'Mocca']
-        if (('21:00' < current_time <= '23:59') or (current_time >= '00:00' and current_time < '06:00')):
+        if ('21:00' < current_time <= '23:59' or '00:00' <= current_time < '06:00'):
             if (int(temperature) < 5):
                 recommendations = ['Hot Chocolate']
             else:

@@ -5,6 +5,29 @@ from src.models.CoffeeRecipe import CoffeeRecipe
 
 class CoffeeRecipeRepository:
 
+    def getById(self, id: int) -> CoffeeRecipe:
+        row = get_db().execute("SELECT * FROM CoffeeRecipe WHERE id = ?", (id,)).fetchone()
+
+        if(row is None):
+            return None
+
+        recipe: CoffeeRecipe = CoffeeRecipe()
+        recipe.id = int(row[0])
+        recipe.name = row[1]
+        recipe.preparation_time = float(row[2])
+
+        ingredientsWithQuantities = []
+        results = get_db().execute(
+            'SELECT i.name, cri.quantity '
+            ' FROM CoffeeRecipeIngredient cri JOIN Ingredient i ON cri.ingredient_id = i.id'
+            ' WHERE cri.recipe_id = ?', (id,)).fetchall()
+        for result in results:
+            ingredientsWithQuantities.append((result[0], float(result[1])))
+
+        recipe.ingredients_with_quantities = ingredientsWithQuantities
+
+        return recipe
+
     def add(self, recipe: CoffeeRecipe):
         db = get_db()
 
@@ -31,49 +54,52 @@ class CoffeeRecipeRepository:
 
         db.commit()
 
-        added_recipe = db.execute(
+        row = db.execute(
             'SELECT * FROM CoffeeRecipe'
             ' WHERE name = (?)',
             (recipe.name,)
         ).fetchone()
 
-        return added_recipe
+        recipe: CoffeeRecipe = CoffeeRecipe()
+        recipe.id = int(row[0])
+        recipe.name = row[1]
+        recipe.preparation_time = float(row[2])
+
+        ingredientsWithQuantities = []
+        results = get_db().execute(
+            'SELECT i.name, cri.quantity '
+            ' FROM CoffeeRecipeIngredient cri JOIN Ingredient i ON cri.ingredient_id = i.id'
+            ' WHERE cri.recipe_id = ?', (coffee_recipe_id,)).fetchall()
+        for result in results:
+            ingredientsWithQuantities.append((result[0], float(result[1])))
+
+        recipe.ingredients_with_quantities = ingredientsWithQuantities
+
+        return recipe
 
     def getAll(self) -> List[CoffeeRecipe]:
-        db = get_db()
+        rows = get_db().execute('SELECT * FROM CoffeeRecipe ORDER BY id').fetchall()
 
-        rows = db.execute("SELECT * FROM CoffeeRecipe ORDER BY id")
-
-        results: List[CoffeeRecipe] = []
+        recipes: List[CoffeeRecipe] = []
 
         for row in rows:
             recipe: CoffeeRecipe = CoffeeRecipe()
-            recipe.id = row[0]
+            recipe.id = int(row[0])
             recipe.name = row[1]
-            recipe.preparation_time = row[2]
-            results.append(recipe)
+            recipe.preparation_time = float(row[2])
 
-        return results
+            ingredientsWithQuantities = []
+            results = get_db().execute(
+                'SELECT i.name, cri.quantity '
+                ' FROM CoffeeRecipeIngredient cri JOIN Ingredient i ON cri.ingredient_id = i.id'
+                ' WHERE cri.recipe_id = ?', (recipe.id,)).fetchall()
+            for result in results:
+                ingredientsWithQuantities.append((result[0], float(result[1])))
 
-    def getRecipeIdByName(self, recipe_name):
-        coffee_recipe_id = get_db().execute(
-            'SELECT id'
-            ' FROM CoffeeRecipe'
-            ' WHERE name = (?)',
-            (recipe_name)
-        ).fetchone()[0]
+            recipe.ingredients_with_quantities = ingredientsWithQuantities
+            recipes.append(recipe)
 
-        return coffee_recipe_id
-
-    def getIngredientIdsByRecipeId(self, recipe_id):
-        ingredients = get_db().execute(
-            'SELECT id'
-            ' FROM CoffeeRecipeIngredient'
-            ' WHERE recipe_id = (?)',
-            (recipe_id)
-        ).fetchall()
-
-        return ingredients
+        return recipes
 
     def getAvailable(self):
         rows = get_db().execute(
@@ -90,13 +116,24 @@ class CoffeeRecipeRepository:
             'AND cri2.no_ingredients_total = cri3.no_ingredients_available'
         ).fetchall()
 
-        results: List[CoffeeRecipe] = []
+        available_recipes: List[CoffeeRecipe] = []
 
         for row in rows:
             recipe: CoffeeRecipe = CoffeeRecipe()
             recipe.id = row[0]
             recipe.name = row[1]
             recipe.preparation_time = row[2]
-            results.append(recipe)
 
-        return results
+            ingredientsWithQuantities = []
+            results = get_db().execute(
+                'SELECT i.name, cri.quantity '
+                ' FROM CoffeeRecipeIngredient cri JOIN Ingredient i ON cri.ingredient_id = i.id'
+                ' WHERE cri.recipe_id = ?', (recipe.id,)).fetchall()
+            for result in results:
+                ingredientsWithQuantities.append((result[0], float(result[1])))
+
+            recipe.ingredients_with_quantities = ingredientsWithQuantities
+
+            available_recipes.append(recipe)
+
+        return available_recipes

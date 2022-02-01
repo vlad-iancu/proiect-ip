@@ -35,7 +35,7 @@ def setTemperature():
             'timestamp': data[1],
             'value': data[2]
         }
-    }), 200
+    }), 201
 
 
 @bp.route('/temperature', methods=['GET'])

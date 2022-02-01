@@ -38,7 +38,7 @@ def add_ingredient():
         "data": {
             "ingredient": ingredient.serialize()
         }
-    }), 200
+    }), 201
 
 
 @bp.route("/:id", methods=["PUT"])
@@ -64,4 +64,4 @@ def delete_ingredient(id):
         "data": {
             "id": id
         }
-    })
+    }), 200

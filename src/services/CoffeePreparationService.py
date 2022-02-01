@@ -1,55 +1,63 @@
+from datetime import datetime, timedelta
+from typing import List
+from src.models.CoffeePreparation import CoffeePreparation
+from src.models.CoffeeRecipe import CoffeeRecipe
 from src.repositories.CoffeePreparationRepository import CoffeePreparationRepository
 from src.repositories.CoffeeRecipeRepository import CoffeeRecipeRepository
+from src.repositories.IngredientRepository import IngredientRepository
 
 
 class CoffeePreparationService:
     def __init__(self) -> None:
         self.coffeePreparationRepository = CoffeePreparationRepository()
         self.coffeeRecipeRepository = CoffeeRecipeRepository()
+        self.ingredientRepository = IngredientRepository()
 
-    def get_all_coffee_preparations(self):
-        coffee_preparations = self.coffeePreparationRepository.getAll()
+    def getAll(self) -> List[CoffeePreparation]:
+        return self.coffeePreparationRepository.getAll()
 
-        data = []
-        for coffee_preparation in coffee_preparations:
-            data.append(list(coffee_preparation))
+    def getLastPrepared(self) -> CoffeePreparation:
+        return self.coffeePreparationRepository.getMostRecent()
 
-        return data
+    def getMostPrepared(self) -> CoffeeRecipe:
+        return self.coffeePreparationRepository.getMostPrepared()
 
-    def get_last_coffee_preparation(self):
-        coffee_preparation = self.coffeePreparationRepository.get_most_recent()
+    def prepareCoffeeCustom(self, recipeId: int, ingredients: List[str], quantities: List[int]) -> CoffeePreparation:
+        recipe = self.coffeeRecipeRepository.getById(recipeId)
 
-        data = list(coffee_preparation)
-
-        return data
-
-    def get_most_prepared_coffee(self):
-        coffee_preparation = self.coffeePreparationRepository.get_most_prepared()
-
-        data = list(coffee_preparation)
-
-        return data
-
-    def prepare_coffee_custom(self, ingredients, quantities):
-        updated_ingredients = self.coffeePreparationRepository.update_ingredients_by_name(
-            ingredients, quantities)
-
-        data = list(updated_ingredients)
-
-        return data
-
-    def prepare_coffee_premade(self, recipe_name):
-        recipe_id = self.coffeeRecipeRepository.getRecipeIdByName(recipe_name)
-
-        if not recipe_id:
+        if recipe is None:
             return None
 
-        ingredients = self.coffeeRecipeRepository.getIngredientIdsByRecipeId(recipe_id)
-        quantities = self.coffeeRecipeRepository.getIngredientQuantitiesByRecipeId(recipe_id)
+        if (len(ingredients) != len(quantities)):
+            return None
 
-        updated_ingredients = self.coffeePreparationRepository.update_ingredients_by_id(
-            ingredients, quantities)
+        for i in range(len(ingredients)):
+            ingredient_name = ingredients[i]
+            ingredient_quantity = quantities[i]
+            self.ingredientRepository.decreaseQuantityByName(ingredient_quantity, ingredient_name)
 
-        data = list(updated_ingredients)
+        preparationTime = self.coffeeRecipeRepository.getById(recipeId).preparation_time
 
-        return data
+        coffeePreparation: CoffeePreparation = CoffeePreparation()
+        coffeePreparation.recipe_id = recipeId
+
+        currentTime = datetime.now()
+        coffeePreparation.started_at = currentTime.strftime("%d/%m/%Y %H:%M:%S")
+        coffeePreparation.finished_at = (
+            currentTime + timedelta(minutes=preparationTime)).strftime("%d/%m/%Y %H:%M:%S")
+        coffeePreparation.ingredients_with_quantities = str(
+            [(ingredients[i], quantities[i]) for i in range(0, len(ingredients))]).strip('[]')
+
+        result = self.coffeePreparationRepository.add(coffeePreparation)
+        return result
+
+    def prepareCoffeePremade(self, recipeId: int) -> CoffeePreparation:
+        recipe = self.coffeeRecipeRepository.getById(recipeId)
+
+        if not recipe:
+            return None
+
+        ingredients_with_quantities = list(map(list, zip(*recipe.ingredients_with_quantities)))
+        ingredients = ingredients_with_quantities[0]
+        quantities = ingredients_with_quantities[1]
+        return CoffeePreparationService().prepareCoffeeCustom(recipeId, ingredients, quantities)

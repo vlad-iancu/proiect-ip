@@ -4,6 +4,7 @@ import sqlite3
 from src.config.Configuration import get_configuration
 from src.models.CoffeeRecipe import CoffeeRecipe
 from src.models.Ingredient import Ingredient
+from src.repositories.CoffeeRecipeRepository import CoffeeRecipeRepository
 from src.services.CoffeeRecipeService import CoffeeRecipeService
 from src.services.IngredientService import IngredientService
 
@@ -16,6 +17,25 @@ class CoffeeRecipeTests(unittest.TestCase):
         sql_schema = open("./schema.sql")
         cursor.executescript(sql_schema.read())
         sql_schema.close()
+
+    def testGetById(self):
+        # Arrange
+        conf = get_configuration()
+        conn = sqlite3.connect(conf.db_file)
+        conn.execute("INSERT INTO CoffeeRecipe (id, name, preparation_time) VALUES (?, ?,?)",
+                     (200, 'Irish Cappuccino', 5.00))
+        conn.commit()
+
+        # Act
+        service: CoffeeRecipeService = CoffeeRecipeService()
+        data1 = service.getById(200)
+        data2 = service.getById(5)
+
+        # Assert
+        self.assertIsNotNone(data1)
+        self.assertEqual('Irish Cappuccino', data1.name)
+        self.assertEqual(5.00, data1.preparation_time)
+        self.assertIsNone(data2)
 
     def testGetAll(self):
         # Arrange
@@ -70,7 +90,7 @@ class CoffeeRecipeTests(unittest.TestCase):
         ingredientTwoId = ingredientService.addIngredient(ingredientTwo)
 
         recipe.ingredients_with_quantities = [(ingredientOneId, 30.0), (ingredientTwoId, 70.0)]
-        recipeId = recipeService.add(recipe)[0]
+        recipeId = recipeService.add(recipe).id
         print(recipeId)
 
         # Assert
