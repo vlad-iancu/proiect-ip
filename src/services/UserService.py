@@ -14,7 +14,7 @@ class UserService:
         return 0
 
     def loginUser(self, username, password):
-        user = self.userRepository.get_by_username(username)
+        user = self.userRepository.getByUsername(username)
 
         if user is None:
             return 'Username not found'
@@ -35,4 +35,4 @@ class UserService:
         if user_id is None:
             g.user = None
         else:
-            g.user = self.userRepository.get_by_id(user_id)
+            g.user = self.userRepository.getById(user_id)

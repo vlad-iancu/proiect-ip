@@ -10,6 +10,7 @@ class __Configuration:
         self.db_user: str = None
         self.db_password: str = None
         self.db_file: str = None
+        self.auth_secret: str = None
 
 
 __configurations: Dict[str, __Configuration] = {}
@@ -29,6 +30,7 @@ def get_configuration(envfile: str = None) -> __Configuration:
         cfg.db_user = dotenvcfg.get("APP_DB_USER")
         cfg.db_password = dotenvcfg.get("APP_DB_PASSWORD")
         cfg.db_file = dotenvcfg.get("APP_DB_FILE")
+        cfg.auth_secret = dotenvcfg.get("APP_AUTH_SECRET")
 
         __configurations[envfile] = cfg
 

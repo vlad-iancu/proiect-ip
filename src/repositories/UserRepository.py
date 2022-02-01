@@ -3,11 +3,7 @@ from src.db import get_db
 
 
 class UserRepository:
-
-    def __init__(self) -> None:
-        pass
-
-    def add(username, password):
+    def add(self, username, password):
         try:
             get_db().execute(
                 "INSERT INTO User (username, password) VALUES (?, ?)",
@@ -19,14 +15,14 @@ class UserRepository:
         except get_db().IntegrityError:
             return -1
 
-    def get_by_username(username):
+    def getByUsername(self, username):
         user = get_db().execute(
             'SELECT * FROM User WHERE username = ?', (username,)
         ).fetchone()
 
         return user
 
-    def get_by_id(user_id):
+    def getById(self, user_id):
         user = get_db().execute(
             'SELECT * FROM User WHERE id = ?', (user_id,)
         ).fetchone()
