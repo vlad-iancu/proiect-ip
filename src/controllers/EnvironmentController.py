@@ -21,7 +21,7 @@ def getService():
 
 @bp.route('/temperature', methods=['POST'])
 def setTemperature():
-    temp = request.form['temp']
+    temp = request.json['temp']
 
     if not temp:
         return jsonify({'status': 'Temp is required.'}), 403
