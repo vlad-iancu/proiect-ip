@@ -17,84 +17,91 @@ def getService():
         service = CoffeePreparationService()
     return service
 
-# Prepare coffee endpoint (prepare a recipe with customized ingredients level,
-# i.e. send a list of ingredients in the request)
-
 
 @bp.route('/', methods=['POST'])
 @login_required
-def prepare_coffee_custom():
-    ingredients_names = request.form['ingredients']
-    quantities = request.form['quantities']
+def prepareCoffeeCustom():
+    """
+    Prepares a coffee recipe with customized ingredients level
+    :ingredient_names: Request param. that is a list of the ingredient names for the recipe
+    :ingredient_quantities: Request param. that is a list of the quantities for each ingredient for the recipe
+    """
+    recipe_id = request.form['recipe_id']
+    ingredient_names = request.form['ingredient_names']
+    ingredient_quantities = request.form['ingredient_quantities']
 
-    if not ingredients_names:
-        return jsonify({'status': 'Ingredients are required.'}), 403
+    if not recipe_id:
+        return jsonify({'status': 'Recipe id is required.'}), 400
 
-    if not quantities:
-        return jsonify({'status': 'Quantities for ingredients are required.'}), 403
+    if not ingredient_names:
+        return jsonify({'status': 'Ingredients are required.'}), 400
 
-    if len(quantities) != len(ingredients_names):
-        return jsonify({'status': 'Quantities are required for each ingredient.'}), 403
+    if not ingredient_quantities:
+        return jsonify({'status': 'Quantities for ingredients are required.'}), 400
 
-    data = getService().prepare_coffee_custom(ingredients_names, quantities)
+    data = getService().prepareCoffeeCustom(recipe_id, ingredient_names, ingredient_quantities)
+
+    if data is None:
+        return jsonify({'status': 'Coffee could not be prepared.'}), 500
 
     return jsonify({
         'status': 'Coffee successfully prepared',
         'data': {
-            'ingredients available': data
+            'prepared_coffee': data.serialize()
         }
-    }), 200
-
-# Prepare coffee endpoint (prepare a premade recipe,  i.e. send recipe
-# name in the request)
+    }), 201
 
 
 @bp.route('/', methods=['POST'])
 @login_required
-def prepare_coffee_premade():
-    recipe_name = request.form['recipe']
+def prepareCoffeePremade():
+    """
+    Prepares a premade coffee recipe
+    :recipe_name: Request param. to indicate  of the recipe to prepare
+    """
+    recipe_name = request.form['recipe_name']
 
     if not recipe_name:
-        return jsonify({'status': 'Recipe name is required.'}), 403
+        return jsonify({'status': 'Recipe name is required.'}), 400
 
     print('Recipe name: ' + recipe_name)
 
-    data = getService().prepare_coffee_premade(recipe_name)
+    data = getService().prepareCoffeePremade(recipe_name)
 
     if data is None:
-        return jsonify({'status': 'There is no recipe with the given recipe name.'}), 403
+        return jsonify({'status': 'There is no coffee recipe with the given name.'}), 404
 
     return jsonify({
         'status': 'Coffee successfully prepared',
         'data': {
-            'ingredients available': data
+            'prepared_coffee': data.serialize()
         }
-    }), 200
+    }), 201
 
 
 @bp.route('/', methods=['GET'])
 @login_required
-def get_all_prepared_coffees():
+def getAllPreparedCoffees():
 
-    data = getService().get_all_coffee_preparations()
+    data = getService().getAll()
 
     return jsonify({
-        'status': 'Coffee preparations successfully retrieved',
+        'status': 'All coffee preparations successfully retrieved',
         'data': {
-            'coffee_preparations': data
+            'all_prepared_coffees': list(map(lambda coffeepreparation: coffeepreparation.serialize(), data))
         }
     }), 200
 
 
 @bp.route('/last', methods=['GET'])
 @login_required
-def get_last_prepared_coffee():
+def getLastPreparedCoffee():
 
-    data = getService().get_last_coffee_preparation()
+    data = getService().getLastPrepared()
 
     return jsonify({
-        'status': 'Last coffee prepared successfully retrieved',
+        'status': 'Last prepared coffee successfully retrieved',
         'data': {
-            'last_coffee_prepared': data
+            'last_prepared_coffee': data.serialize()
         }
     }), 200

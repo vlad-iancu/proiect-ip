@@ -26,7 +26,7 @@ def getAll():
     return jsonify({
         'status': 'Coffee recipes successfully retrieved',
         'data': {
-            'coffee_recipes': data
+            'coffee_recipes': list(map(lambda coffeerecipe: coffeerecipe.serialize(), data))
         }
     }), 200
 
@@ -58,30 +58,30 @@ def add():
     coffee_recipe = request.form['coffee_recipe']
 
     if not coffee_recipe['name']:
-        return jsonify({'status': 'Coffee recipe name is required.'}), 403
+        return jsonify({'status': 'Coffee recipe name is required.'}), 400
 
     if not coffee_recipe['ingredients_with_quantity']:
-        return jsonify({'status': 'Coffee recipe ingredients (min. 1) are required.'}), 403
+        return jsonify({'status': 'Coffee recipe ingredients (min. 1) are required.'}), 400
 
     data = getService().add(coffee_recipe)
 
     return jsonify({
         'status': 'Coffee recipe succesfully added',
         'data': {
-            'added_recipe': data
+            'added_recipe': data.serialize()
         }
-    }), 200
+    }), 201
 
 
 @bp.route('/available', methods=['GET'])
 @login_required
-def get_available_coffees():
+def getAvailableCoffeeRecipes():
 
     data = getService().getAvailable()
 
     return jsonify({
         'status': 'Available coffees successfully retrieved',
         'data': {
-            'available_coffees': data
+            'available_coffees': list(map(lambda coffeerecipe: coffeerecipe.serialize(), data))
         }
     }), 200

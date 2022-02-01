@@ -41,6 +41,22 @@ class IngredientRepository:
         self.conn.commit()
         return data
 
+    def decreaseQuantityByName(self, quantityToDescrese: int, ingredientName: str) -> Ingredient:
+        stmt = '''
+      UPDATE Ingredient SET available = available - ? WHERE name = ?
+    '''
+        cursor = self.conn.cursor()
+        cursor.execute(stmt, (quantityToDescrese, ingredientName))
+        self.conn.commit()
+        cursor = self.conn.execute("SELECT * FROM Ingredient WHERE name = ?", (ingredientName,))
+        row = cursor.fetchone()
+        ingredient: Ingredient = Ingredient()
+        ingredient.id = row[0]
+        ingredient.name = row[1]
+        ingredient.unit = row[2]
+        ingredient.available = row[3]
+        return ingredient
+
     def getById(self, id: int) -> Ingredient:
         cursor = self.conn.execute("SELECT * FROM Ingredient WHERE id = ?", (id,))
         results = cursor.fetchall()

@@ -44,7 +44,7 @@ CREATE TABLE CoffeePreparation (
   recipe_id INTEGER,
   started_at TEXT,
   finished_at TEXT,
-  ingredients_json TEXT NOT NULL,
+  ingredients_with_quantities TEXT NOT NULL,
   PRIMARY KEY (recipe_id, started_at),
   FOREIGN KEY (recipe_id) REFERENCES CoffeeRecipe (id)
 );
