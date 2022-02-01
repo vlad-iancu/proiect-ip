@@ -39,7 +39,7 @@ def setTemperature():
 
 
 @bp.route('/temperature', methods=['GET'])
-def get_temperature():
+def getTemperature():
     retrieved_temperature = random.randint(-10, 30)
 
     return jsonify({
@@ -52,7 +52,7 @@ def get_temperature():
 
 @bp.route('/currenttime', methods=['GET'])
 def get_current_time():
-    now = datetime.now()
+    now = datetime.datetime.now()
 
     current_time = now.strftime("%H:%M")
 
