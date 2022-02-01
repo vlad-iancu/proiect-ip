@@ -18,7 +18,7 @@ def getService():
     return service
 
 
-@bp.route('/', methods=['POST'])
+@bp.route('/custom', methods=['POST'])
 @login_required
 def prepareCoffeeCustom():
     """
@@ -80,7 +80,6 @@ def prepareCoffeePremade():
 
 
 @bp.route('/', methods=['GET'])
-@login_required
 def getAllPreparedCoffees():
 
     data = getService().getAll()
@@ -94,10 +93,17 @@ def getAllPreparedCoffees():
 
 
 @bp.route('/last', methods=['GET'])
-@login_required
 def getLastPreparedCoffee():
 
     data = getService().getLastPrepared()
+
+    if data is None:
+        return jsonify({
+            'status': 'Last prepared coffee successfully retrieved',
+            'data': {
+                'last_prepared_coffee': 'No coffee has been prepared yet'
+            }
+        }), 200
 
     return jsonify({
         'status': 'Last prepared coffee successfully retrieved',

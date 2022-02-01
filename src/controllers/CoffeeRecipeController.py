@@ -1,8 +1,10 @@
+import ast
 from flask import (
     Blueprint, jsonify, request
 )
 
 from src.controllers.AuthController import login_required
+from src.models.CoffeeRecipe import CoffeeRecipe
 from src.services.CoffeeRecipeService import CoffeeRecipeService
 
 service = None
@@ -18,7 +20,6 @@ def getService():
 
 
 @bp.route('/', methods=['GET'])
-@login_required
 def getAll():
 
     data = getService().getAll()
@@ -32,8 +33,7 @@ def getAll():
 
 
 @bp.route('/recommendations', methods=['GET'])
-@login_required
-def getRecommendedCoffeeRecipes(current_time, temperature):
+def getRecommendedCoffeeRecipes():
     """
     Returns recommended coffee recipe(s) based on time and temperature (max. 2 recommendations)
 
@@ -41,6 +41,8 @@ def getRecommendedCoffeeRecipes(current_time, temperature):
     :param temperature: Integer temperature in str. format
     :return: List of strings (CoffeeRecipe names)
     """
+    current_time = request.form['current_time']
+    temperature = request.form['temperature']
 
     data = getService().getRecommendations(current_time, temperature)
 
@@ -60,8 +62,17 @@ def add():
     if not coffee_recipe['name']:
         return jsonify({'status': 'Coffee recipe name is required.'}), 400
 
+    if not coffee_recipe['preparation_time']:
+        return jsonify({'status': 'Coffee preparation time is required.'}), 400
+
     if not coffee_recipe['ingredients_with_quantity']:
         return jsonify({'status': 'Coffee recipe ingredients (min. 1) are required.'}), 400
+
+    recipe: CoffeeRecipe = CoffeeRecipe()
+    recipe.name = coffee_recipe['name']
+    recipe.preparation_time = float(coffee_recipe['preparation_time'])
+    recipe.ingredients_with_quantities = list(
+        ast.literal_eval(coffee_recipe['ingredients_with_quantity']))
 
     data = getService().add(coffee_recipe)
 
@@ -74,13 +85,12 @@ def add():
 
 
 @bp.route('/available', methods=['GET'])
-@login_required
 def getAvailableCoffeeRecipes():
 
     data = getService().getAvailable()
 
     return jsonify({
-        'status': 'Available coffees successfully retrieved',
+        'status': 'Available coffee recipes successfully retrieved',
         'data': {
             'available_coffees': list(map(lambda coffeerecipe: coffeerecipe.serialize(), data))
         }

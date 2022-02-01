@@ -36,6 +36,9 @@ class CoffeePreparationRepository:
         rows = get_db().execute(
             'SELECT * FROM coffeepreparation ORDER BY finished_at DESC').fetchall()
 
+        if rows is None:
+            return None
+
         coffeepreparations: List[CoffeePreparation] = []
 
         for row in rows:
@@ -52,7 +55,11 @@ class CoffeePreparationRepository:
         row = get_db().execute(
             'SELECT * FROM coffeepreparation ORDER BY finished_at DESC LIMIT 1').fetchone()
 
+        if row is None:
+            return None
+
         coffeepreparation: CoffeePreparation = CoffeePreparation()
+
         coffeepreparation.recipe_id = row[0]
         coffeepreparation.started_at = row[1]
         coffeepreparation.finished_at = row[2]
@@ -68,6 +75,9 @@ class CoffeePreparationRepository:
             ' ORDER BY times_prepared DESC'
             ' LIMIT 1'
         ).fetchone()
+
+        if row is None:
+            return None
 
         recipe_id = row[0]
 
