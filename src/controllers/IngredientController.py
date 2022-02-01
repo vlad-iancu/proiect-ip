@@ -21,9 +21,22 @@ def get_all_ingredients():
     return jsonify({
         "status": "Success",
         "data": {
-            "ingredients": data
+            "ingredients": list(map(lambda ingredient: ingredient.serialize(), data))
         }
     }), 200
+
+
+@bp.route("/<id>", methods=["GET"])
+def get_ingredient(id):
+    ingredient = getService().getIngredientById(id)
+    status = "Success" if ingredient else "Fail"
+    code = 200 if ingredient else 400
+    return jsonify({
+        "status": status,
+        "data": {
+            "ingredients": ingredient.serialize()
+        }
+    }), code
 
 
 @bp.route("/", methods=["POST"])
@@ -41,12 +54,12 @@ def add_ingredient():
     }), 201
 
 
-@bp.route("/:id", methods=["PUT"])
+@bp.route("/<id>", methods=["PUT"])
 def update_ingredient(id):
     json_data = request.json
     ingredient: Ingredient = Ingredient(
         id, json_data["name"], json_data["unit"], json_data["available"])
-    ingredient = getService().addIngredient(ingredient)
+    ingredient = getService().updateIngredient(ingredient)
     return jsonify({
         "status": "Success",
         "data": {
@@ -55,7 +68,7 @@ def update_ingredient(id):
     }), 200
 
 
-@bp.route("/:id", methods=["DELETE"])
+@bp.route("/<id>", methods=["DELETE"])
 def delete_ingredient(id):
     deleted = getService().deleteIngredient(id)
     status = "Success" if deleted else "Fail"
