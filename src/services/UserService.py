@@ -26,7 +26,7 @@ class UserService:
 
         return 0
 
-    def logout():
+    def logout(self):
         session.clear()
 
     def loadCurrentUser(self):

@@ -10,5 +10,5 @@ class CoffeeRecipe:
             "id": self.id,
             "name": self.name,
             "preparation_time": self.preparation_time,
-            "ingredients_with_quantities": self.ingredients_with_quantities
+            "ingredients_with_quantities": str(self.ingredients_with_quantities).strip('[]')
         }

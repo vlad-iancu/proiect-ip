@@ -6,6 +6,8 @@ import src.controllers.AuthController as auth
 import src.controllers.CoffeePreparationController as coffeepreparation
 import src.controllers.CoffeeRecipeController as coffeerecipe
 import src.controllers.IngredientController as ingredient
+import src.controllers.EnvironmentController as environment
+
 
 app = Flask(__name__)
 app.config.from_mapping(SECRET_KEY=get_configuration().auth_secret)
@@ -14,6 +16,7 @@ app.register_blueprint(auth.bp)
 app.register_blueprint(coffeerecipe.bp)
 app.register_blueprint(coffeepreparation.bp)
 app.register_blueprint(ingredient.bp)
+app.register_blueprint(environment.bp)
 
 db.init_app(app)
 
