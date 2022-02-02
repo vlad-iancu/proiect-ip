@@ -57,7 +57,7 @@ def getRecommendedCoffeeRecipes():
 @bp.route('/', methods=['POST'])
 @login_required
 def add():
-    coffee_recipe = request.form['coffee_recipe']
+    coffee_recipe = request.json['coffee_recipe']
 
     if not coffee_recipe['name']:
         return jsonify({'status': 'Coffee recipe name is required.'}), 400

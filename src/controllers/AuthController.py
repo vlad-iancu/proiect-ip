@@ -12,8 +12,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=["POST"])
 def register():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.json['username']
+    password = request.json['password']
 
     if not username:
         return jsonify({'status': 'Username is required.'}), 403
@@ -29,8 +29,8 @@ def register():
 
 @bp.route('/login', methods=["POST"])
 def login():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.json['username']
+    password = request.json['password']
 
     status = __userService.loginUser(username, password)
     if status:

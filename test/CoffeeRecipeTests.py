@@ -95,7 +95,6 @@ class CoffeeRecipeTests(unittest.TestCase):
 
         recipe.ingredients_with_quantities = [(ingredientOneId, 30.0), (ingredientTwoId, 70.0)]
         recipeId = recipeService.add(recipe).id
-        print(recipeId)
 
         # Assert
         conn = sqlite3.connect(conf.db_file)

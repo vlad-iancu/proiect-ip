@@ -26,9 +26,9 @@ def prepareCoffeeCustom():
     :ingredient_names: Request param. that is a list of the ingredient names for the recipe
     :ingredient_quantities: Request param. that is a list of the quantities for each ingredient for the recipe
     """
-    recipe_id = request.form['recipe_id']
-    ingredient_names = request.form['ingredient_names']
-    ingredient_quantities = request.form['ingredient_quantities']
+    recipe_id = request.json['recipe_id']
+    ingredient_names = request.json['ingredient_names']
+    ingredient_quantities = request.json['ingredient_quantities']
 
     if not recipe_id:
         return jsonify({'status': 'Recipe id is required.'}), 400
@@ -59,7 +59,7 @@ def prepareCoffeePremade():
     Prepares a premade coffee recipe
     :recipe_name: Request param. to indicate  of the recipe to prepare
     """
-    recipe_name = request.form['recipe_name']
+    recipe_name = request.json['recipe_name']
 
     if not recipe_name:
         return jsonify({'status': 'Recipe name is required.'}), 400
