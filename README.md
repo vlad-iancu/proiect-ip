@@ -38,6 +38,11 @@ On Windows:
 .\run.ps1
 ```
 
+
+## Swagger API Schema
+
+The Swagger / OpenAPI schema is available as a [swagger.yaml](swagger.yaml) file or on [SwaggerHub](https://app.swaggerhub.com/apis/vladpirlog/proiect-ip/1.0.0).
+
 ### Credits
 * Iancu Vlad-Alexandru
 * Pîrlog Vlad
