@@ -9,7 +9,7 @@ class ConfigTests(unittest.TestCase):
         dotenvcfg = dotenv.dotenv_values(".env.test")
 
         # Act
-        configuration = get_configuration(".env.test")
+        configuration = get_configuration()
 
         # Assert
         self.assertEqual(configuration.db_host, dotenvcfg.get("APP_DB_HOST"))
